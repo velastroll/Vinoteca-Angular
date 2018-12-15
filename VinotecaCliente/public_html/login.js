@@ -1,35 +1,36 @@
 
 var inicio = angular.module("mainMod", []);
 inicio.constant("baseUrl", "http://localhost:8080/Vinoteca2Angular/webresources/paraAngular");
-inicio.controller("inicSesCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
-    $scope.displayMode = "list"; // Variable que controla la vista
-    $scope.inicSesionAbonado = function(id) {
+inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
+    $scope.displayMode = "login"; // Variable que controla la vista
+    $scope.getAbonado = function() {
         $http({
             method: "GET",
-            url: baseUrl + "/abonado/" + id
+            url: baseUrl + "/abonado/" + $scope.id
         }).then(function(response) { //furrula, ir a pagina abonado
             $scope.abonado = response.data; //?
-            $scope.displayMode = "AbVerTablaPreferencias"; //cambiar vista
-            console.log("exito: " + response.status);
+            $scope.displayMode = "preferences"; //cambiar vista
+            console.log("exito: " + response.statusText);
             console.log("cuerpo: " + response.data);
             
         },function(response) { //casca, mostrar error
-            console.log("error: " + response.status);
+            $scope.inicioSesion = response.statusText;
+            console.log("error: " + response.statusText);
         });
     };
     
-    $scope.inicSesionEmpleado = function(id) {
+    $scope.getEmpleado = function() {
         $http({
             method: "GET",
-            url: baseUrl + "/empleado/" + id
+            url: baseUrl + "/empleado/" + $scope.id
         }).then(function(response) { //furrula, ir a pagina abonado
             $scope.empleado = response.data; //?
-            $scope.displayMode = "EmplVerTablaPedidos"; //cambiar vista
-            console.log("exito: " + response.status);
+            $scope.displayMode = "orders"; //cambiar vista
+            console.log("exito: " + response.statusText);
             console.log("cuerpo: " + response.data);
-            
         },function(response) { //casca, mostrar error
-            console.log("error: " + response.status);
+            $scope.inicioSesion = response.statusText;
+            console.log("error: " + response.statusText);
         });
     };
 

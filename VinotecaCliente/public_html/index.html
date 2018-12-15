@@ -9,19 +9,31 @@ and open the template in the editor.
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+        <!-- biblioteca angular -->
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script> <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Importamos Script de inicio de sesion -->
         <script src="login.js"></script>
+        <!-- Pagina de inicio: http://localhost:8383/VinotecaCliente/index.html -->
     </head>
     <body>
-        <div></div>
-        <form ng-controller="inicSesCtrl" name="form_login">
+        <div ng-controller="getUserCtrl" name="form_login">
             <label>Id de usuario:</label> <input type="text" ng-model="id" requied/> <!-- id es variable del input -->
-            <button ng-click="inicSesionEmpleado(id)">Entrar como Empleado</button>
-            <button ng-click="inicSesionAbonado(id)">Entrar como Abonado</button>
-        </form>
-        
-        <ng-include src="'tablaPedidos.html'" ng-show="displayMode == 'EmplVerTablaPedidos'"></ng-include>
-        <ng-include src="'tablaPreferencias.html'" ng-show="displayMode == 'AbVerTablaPreferencias'"></ng-include>
-        
+            <button ng-click="getEmpleado()">Entrar como Empleado</button>
+            <button ng-click="getAbonado()">Entrar como Abonado</button>
+        </div>
+        <div ng-if="inicioSesion === 'Not Found'">
+            <p> Usuario incorrecto. <p>  
+        </div>
+        <div>
+            <ng-include src="'index.html'" ng-show="displayMode === 'login'"></ng-include>
+            <ng-include src="'tablaPedidos.html'" ng-show="displayMode === 'orders'"></ng-include>
+            <ng-include src="'tablaPreferencias.html'" ng-show="displayMode === 'preferences'"></ng-include>            
+        </div>
+
     </body>
 </html>

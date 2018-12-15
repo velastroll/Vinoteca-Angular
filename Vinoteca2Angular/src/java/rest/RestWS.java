@@ -25,7 +25,7 @@ import persistencia.*;
  * @author Mario Torbado
  */
 @javax.ws.rs.ApplicationPath("webresources")
-@Path("paraAngular")
+@Path("/paraAngular")
 public class RestWS extends Application{
     @EJB
     private VinoFacadeLocal vinoFacade;
@@ -39,32 +39,36 @@ public class RestWS extends Application{
     }
     
     @GET
-    @Path("abonado/{id}")
+    @Path("/abonado/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response inicSesionAbonado(@PathParam("id") String id) {
-        
-        System.out.println(abonadoFacade.find(id).getAbNif());
+    public Response getAbonadoByID(@PathParam("id") String id) {
         
         ResponseBuilder respuesta = Response.status(Response.Status.ACCEPTED);
+        Abonado a = abonadoFacade.find(id);
+        if (a == null) {
+            respuesta.status(Response.Status.NOT_FOUND).build();
+        }
         respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
         respuesta.header("Access-Control-Expose-Headers", "*");
         respuesta.type("application/json");
-        respuesta.entity(abonadoFacade.find(id));
+        respuesta.entity(a);
         return respuesta.build();
     }
     
     @GET
-    @Path("empleado/{id}")
+    @Path("/empleado/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response inicSesionEmpl(@PathParam("id") String id) {
-        
-        System.out.println(empleadoFacade.find(id).getEmNif());
+    public Response getEmpleadoByID(@PathParam("id") String id) {
         
         ResponseBuilder respuesta = Response.status(Response.Status.ACCEPTED);
+        Empleado e = empleadoFacade.find(id);
+        if (e == null) {
+            respuesta.status(Response.Status.NOT_FOUND).build();
+        }
         respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
         respuesta.header("Access-Control-Expose-Headers", "*");
         respuesta.type("application/json");
-        respuesta.entity(empleadoFacade.find(id));
+        respuesta.entity(e);
         return respuesta.build();
     }
     
