@@ -6,7 +6,6 @@ and open the template in the editor.
 -->
 <html ng-app="mainMod">
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- biblioteca angular -->
@@ -22,9 +21,9 @@ and open the template in the editor.
     </head>
     <body ng-controller="getUserCtrl">
         <div>
-            <ng-include src="'login.html'" ng-show="displayMode == 'login'"></ng-include>
-            <ng-include src="'tablaPedidos.html'" ng-show="displayMode == 'orders'"></ng-include>
-            <ng-include src="'tablaPreferencias.html'" ng-show="displayMode == 'preferences'"></ng-include>            
+            <ng-include src="'login.html'" ng-show="displayMode === 'login'"></ng-include>
+            <ng-include src="'tablaPedidos.html'" ng-show="displayMode === 'orders'"></ng-include>
+            <ng-include src="'tablaPreferencias.html'" ng-show="displayMode === 'preferences'"></ng-include>            
         </div>
 
     </body>

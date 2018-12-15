@@ -13,6 +13,9 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             console.log("exito: " + response.statusText);
             console.log("cuerpo: " + response.data);
             
+            // Obtiene los vinos disponibles
+            $scope.getVinosDisponibles(id);
+            
         },function(response) { //casca, mostrar error
             $scope.inicioSesion = response.statusText;
             console.log("error: " + response.statusText);
@@ -33,6 +36,21 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             console.log("error: " + response.statusText);
         });
     };
-
+    
+    $scope.getVinosDisponibles = function(id){
+        $http({ // peticion get
+            method: "GET",
+            url: baseUrl + "/preferencias/vinos/" + id
+        }).then( // peticion correcta
+                function(response){
+                    $scope.vinillos = response.data; // Vino[] 
+                    console.log("exito: " + response.statusText);
+                    console.log("cuerpo: " + response.data);    
+                }, // peticion incorrecta
+                function(response){
+                    $scope.vinosStatus = response.statusText;
+                    console.log("error: " + response.statusText);
+                });
+    };
 });
            
