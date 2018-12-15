@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <label>Id de usuario:</label> <input type="text" ng-model="id" requied/> <!-- id es variable del input -->
+            <button ng-click="getEmpleado(id)">Entrar como Empleado</button>
+            <button ng-click="getAbonado(id)">Entrar como Abonado</button>
+        </div>
+        <div ng-if="inicioSesion === 'Not Found'">
+            <p> Usuario incorrecto. <p>  
+        </div>
+    </body>
+</html>

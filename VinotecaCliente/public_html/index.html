@@ -20,19 +20,11 @@ and open the template in the editor.
         <script src="login.js"></script>
         <!-- Pagina de inicio: http://localhost:8383/VinotecaCliente/index.html -->
     </head>
-    <body>
-        <div ng-controller="getUserCtrl" name="form_login">
-            <label>Id de usuario:</label> <input type="text" ng-model="id" requied/> <!-- id es variable del input -->
-            <button ng-click="getEmpleado()">Entrar como Empleado</button>
-            <button ng-click="getAbonado()">Entrar como Abonado</button>
-        </div>
-        <div ng-if="inicioSesion === 'Not Found'">
-            <p> Usuario incorrecto. <p>  
-        </div>
+    <body ng-controller="getUserCtrl">
         <div>
-            <ng-include src="'index.html'" ng-show="displayMode === 'login'"></ng-include>
-            <ng-include src="'tablaPedidos.html'" ng-show="displayMode === 'orders'"></ng-include>
-            <ng-include src="'tablaPreferencias.html'" ng-show="displayMode === 'preferences'"></ng-include>            
+            <ng-include src="'login.html'" ng-show="displayMode == 'login'"></ng-include>
+            <ng-include src="'tablaPedidos.html'" ng-show="displayMode == 'orders'"></ng-include>
+            <ng-include src="'tablaPreferencias.html'" ng-show="displayMode == 'preferences'"></ng-include>            
         </div>
 
     </body>

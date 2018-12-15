@@ -3,10 +3,10 @@ var inicio = angular.module("mainMod", []);
 inicio.constant("baseUrl", "http://localhost:8080/Vinoteca2Angular/webresources/paraAngular");
 inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
     $scope.displayMode = "login"; // Variable que controla la vista
-    $scope.getAbonado = function() {
+    $scope.getAbonado = function(id) {
         $http({
             method: "GET",
-            url: baseUrl + "/abonado/" + $scope.id
+            url: baseUrl + "/abonado/" + id
         }).then(function(response) { //furrula, ir a pagina abonado
             $scope.abonado = response.data; //?
             $scope.displayMode = "preferences"; //cambiar vista
@@ -19,10 +19,10 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         });
     };
     
-    $scope.getEmpleado = function() {
+    $scope.getEmpleado = function(id) {
         $http({
             method: "GET",
-            url: baseUrl + "/empleado/" + $scope.id
+            url: baseUrl + "/empleado/" + id
         }).then(function(response) { //furrula, ir a pagina abonado
             $scope.empleado = response.data; //?
             $scope.displayMode = "orders"; //cambiar vista
