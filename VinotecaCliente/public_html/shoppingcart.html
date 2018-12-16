@@ -6,17 +6,12 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>ABONADO: Vinos</title>
+        <title>Carrito de la compra</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div>
-            <br>
-            Bienvenido <label>{{id}}</label>,<br>
-            estos son los vinos disponibles acorde a sus preferencias:
-        </div>
-        <div class="panel-body">
+        <div ng-if="cesta.size !== 0"> 
             <table class="table table-striped table-bordered">
                 <thead> <tr>
                         <th>Categoria</th>
@@ -25,27 +20,26 @@ and open the template in the editor.
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in vinillos">
+                    <!-- 
+                        Angular no permite que se repita el mismo objeto en un bucle, por lo que hay
+                            que indicar el "track by $index" para poder permitirlo.
+                    -->
+                    <tr ng-repeat="item in cesta.productos track by $index">
                         <td>{{item.categoria.nombre}}</td>
                         <td>{{item.comentario}}</td>
                         <td>{{item.nombrecomercial}}</td>
-                        <td>{{item}}</td>
-                        <td class="text-center">
-                            <button class="btn btn-xs btn-primary" ng-click="add2Cart(item)">
-                                Añadir a la cesta</button>  </td>
+                        <td><button ng-click="buyWine(item)">Comprar</button></td>
                     </tr>
                 </tbody>
             </table>
-            <div ng-if="add2cartStatus === 'Not Found'">
-                No se ha podido añadir a la cesta.
-            </div>
-            <div ng-if="vinosStatus === 'Not Found'">
-                No se ha podido encontrar ningún vino.
-            </div>
+            <button ng-click="buy()">COMPRAR TODO</button>
         </div>
-        <div> Productos en la cesta: {{cesta.size}} 
-            <button ng-click="changeView('shoppingCart')"> Ver la cesta</button>
-        </div>
-
+        <div ng-if="buyStatus === 'Accepted'">
+            <br>
+            <label> Compra realizada con éxito</label>
+            <br>
+            </div>
+        <br>
+        <button ng-click="changeView('preferences')">Volver a preferencias</button>
     </body>
 </html>

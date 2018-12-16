@@ -3,7 +3,6 @@ var inicio = angular.module("mainMod", []);
 inicio.constant("baseUrl", "http://localhost:8080/Vinoteca2Angular/webresources/paraAngular");
 inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
     $scope.displayMode = "login"; // Variable que controla la vista
-    $scope.empleado = {};
     $scope.cesta = {
         size: 0,
         productos: {},
@@ -86,7 +85,7 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             method: "POST",
             url: baseUrl + "/abonado/" + $scope.id + "/vinos/" + vino.id
         }).then(  // success
-                function(response){  
+                function(){  
                     console.log("Abonado: " + $scope.id + "/ Vino: " + vino.id ),
                     // añadimos el vino al modelo local
                     $scope.cesta.add(vino);  
@@ -96,6 +95,41 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
                     $scope.add2cartStatus = response.statusText;
                     console.log("error: " + response.statusText);
                 });
+    };
+    
+    
+    /**
+     * Function para cambiar de vista
+     * @param {type} url
+     */
+    $scope.changeView = function(url){
+        $scope.displayMode = url;
+        $scope.buyStatus = '';
+        $scope.add2cartStatus = '';
+    };
+    
+    /**
+     * Funcion que compra todo lo que hay en la cesta
+     */
+    $scope.buy = function(){
+        for (item in $scope.cesta.productos){
+            $scope.buyWine(item);
+        }
+    };
+    
+    $scope.buyWine = function(wine){
+        $http({
+            method: "GET",
+            url: baseUrl + "/" + $scope.id + "/" + wine.id
+        }).then(function(response){
+            $scope.buyStatus = response.statusText;
+            index = $scope.cesta.productos.indexOf(wine);
+            $scope.cesta.productos.splice(index, 1);
+            $scope.cesta.size--;
+        }, function(response){
+            $scope.buyStatus = response.statusText;
+            console.log("ERROR[buy(" + wine.id + ")]: " + response.statusText);
+        });
     };
 });
            
