@@ -9,12 +9,7 @@ package rest;
 import dominio.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.json.JsonObject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -28,6 +23,13 @@ import persistencia.*;
 @javax.ws.rs.ApplicationPath("webresources")
 @Path("/paraAngular")
 public class RestWS extends Application{
+    
+    @EJB
+    private PedidoFacadeLocal pedidoFacade;
+    @EJB
+    private EstadoPedidoFacadeLocal estadoPedidoFacade;
+    @EJB
+    private ReferenciaFacadeLocal referenciaFacade;
     @EJB
     private VinoFacadeLocal vinoFacade;
     @EJB
@@ -194,7 +196,7 @@ public class RestWS extends Application{
      * @param vinoid
      * @return 
      */
-    @GET
+    @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/{userid}/{vinoid}")
     public Response buyVino(@PathParam("userid") String userid, @PathParam("vinoid") String vinoid) {
@@ -203,37 +205,44 @@ public class RestWS extends Application{
         
         
         ResponseBuilder respuesta = Response.status(Response.Status.ACCEPTED);
-        /*
-        List<Vino> vinos = vinoFacade.findAll();
-        List<Preferencia> preferencias = preferenciaFacade.findAll();
+        
+        // Añadimos el vino como pedido:
+        
+        Vino vino = vinoFacade.find(Integer.parseInt(vinoid));
         Abonado a = abonadoFacade.find(userid);
-        List<Vino> disponibles = new ArrayList();
-        // creamos una lista de preferencias de un determinado usuario /
-        for(Preferencia p: preferencias){
-            if ( p.getNifabonado().getAbNif().equals(a.getAbNif()) ) {
-                // Creamos una lista de los vinos disponibles
-                for(Vino v: vinos){
-                    if (p.getCategoria().equals(v.getCategoria()) && p.getIddenominacion().equals(v.getIddenominacion()) ){
-                        disponibles.add(v);
-                    }
-                }
+        
+        if(vino != null) 
+            System.out.println("\n> Encontrado vino que se quiere comprar: " + vinoid);
+        
+        
+        List<Referencia> rfs = referenciaFacade.findAll();
+        Referencia ref = null;
+        
+        for(Referencia r : rfs) {
+            if (r.getVinoid().getId() == Integer.parseInt(vinoid)) {
+                ref = r;
             }
         }
         
-        // creamos un array de vinos disponibles 
-        Vino[] arrayVino = new Vino[disponibles.size()];
-        for(int i = 0; i < disponibles.size() ; i++){
-            arrayVino[i] = disponibles.get(i);
-        }
+        if (ref != null ) System.out.println("> Encontrada referencia del vino: " + ref.toString());
+        
+        Pedido p = new Pedido();
+        p.setPeNif(a);
+        p.setPeReferencia(ref);
+        p.setFecha("18-12-2018");
+        p.setImporte(ref.getPrecio());
+        p.setPeEstado(estadoPedidoFacade.find("p"));
+        pedidoFacade.create(p);
+        
+        System.out.println("> Pedido de vino creado.\n");
         
         // Generamos la respuesta
         respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
         respuesta.header("Access-Control-Expose-Headers", "*");
         respuesta.type("application/json");
-        if (vinos == null || preferencias == null || arrayVino.length==0) {
+        if (a == null || ref == null || vino == null) {
             respuesta.status(Response.Status.NOT_FOUND);
         }
-        respuesta.entity(arrayVino);**/
         return respuesta.build();
     }
     
@@ -241,4 +250,6 @@ public class RestWS extends Application{
     
   
 // String vinoJsonStr = vino.toString();
+
+
 }

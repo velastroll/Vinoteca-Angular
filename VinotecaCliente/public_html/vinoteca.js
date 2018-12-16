@@ -5,7 +5,7 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
     $scope.displayMode = "login"; // Variable que controla la vista
     $scope.cesta = {
         size: 0,
-        productos: {},
+        productos: [],
         add : function(item){
             console.log("Vino: " + item.id);
             if ($scope.cesta.size === 0){
@@ -119,13 +119,15 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
     
     $scope.buyWine = function(wine){
         $http({
-            method: "GET",
+            method: "POST",
             url: baseUrl + "/" + $scope.id + "/" + wine.id
         }).then(function(response){
             $scope.buyStatus = response.statusText;
             index = $scope.cesta.productos.indexOf(wine);
             $scope.cesta.productos.splice(index, 1);
             $scope.cesta.size--;
+            console.log("buy(" + wine.id + ")]: " + response.statusText);
+            
         }, function(response){
             $scope.buyStatus = response.statusText;
             console.log("ERROR[buy(" + wine.id + ")]: " + response.statusText);
