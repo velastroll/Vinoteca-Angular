@@ -3,15 +3,32 @@ var inicio = angular.module("mainMod", []);
 inicio.constant("baseUrl", "http://localhost:8080/Vinoteca2Angular/webresources/paraAngular");
 inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
     $scope.displayMode = "login"; // Variable que controla la vista
+    $scope.empleado = {};
+    $scope.cesta = {
+        size: 0,
+        productos: {},
+        add : function(item){
+            console.log("Vino: " + item.id);
+            if ($scope.cesta.size === 0){
+                $scope.cesta.productos = [item]; // array de vinos
+            } else {
+            $scope.cesta.productos.push(item); // añade un vino al array
+            }
+            $scope.cesta.size++;
+        }
+    };
+    
+    // TODO: Recuperar los productos de la carta EJB
     $scope.getAbonado = function(id) {
         $http({
             method: "GET",
             url: baseUrl + "/abonado/" + id
         }).then(function(response) { //furrula, ir a pagina abonado
+            $scope.id = id;
             $scope.abonado = response.data; //?
             $scope.displayMode = "preferences"; //cambiar vista
             console.log("exito: " + response.statusText);
-            console.log("cuerpo: " + response.data);
+            console.log("cuerpo: " + $scope.abonado[0].ab_login);
             
             // Obtiene los vinos disponibles
             $scope.getVinosDisponibles(id);
@@ -22,10 +39,10 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         });
     };
     
-    $scope.getEmpleado = function(id) {
+    $scope.getEmpleado = function(empleadoid) {
         $http({
             method: "GET",
-            url: baseUrl + "/empleado/" + id
+            url: baseUrl + "/empleado/" + empleadoid
         }).then(function(response) { //furrula, ir a pagina abonado
             $scope.empleado = response.data; //?
             $scope.displayMode = "orders"; //cambiar vista
@@ -37,10 +54,15 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         });
     };
     
-    $scope.getVinosDisponibles = function(id){
+    /**
+     * Funcion que añade al modelo 'vinillos' la lista de vinos disponibles
+     * segun las preferencias de un determinado usuario.
+     * @param {type} id identificador del usuario = login
+     */
+    $scope.getVinosDisponibles = function(vinoid){
         $http({ // peticion get
             method: "GET",
-            url: baseUrl + "/preferencias/vinos/" + id
+            url: baseUrl + "/preferencias/vinos/" + vinoid
         }).then( // peticion correcta
                 function(response){
                     $scope.vinillos = response.data; // Vino[] 
@@ -49,6 +71,29 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
                 }, // peticion incorrecta
                 function(response){
                     $scope.vinosStatus = response.statusText;
+                    console.log("error: " + response.statusText);
+                });
+    };
+    
+    /**
+     * Funcion que añade un nuevo vino a la carta, tanto al modelo $scope.cesta 
+     * como al EJB de sesión [EJB TODAVIA SIN IMPLEMENTAR]
+     * @param {type} vino
+     */
+    $scope.add2Cart = function(vino){
+        $http({
+            // lo añadimos al EJB de sesion
+            method: "POST",
+            url: baseUrl + "/abonado/" + $scope.id + "/vinos/" + vino.id
+        }).then(  // success
+                function(response){  
+                    console.log("Abonado: " + $scope.id + "/ Vino: " + vino.id ),
+                    // añadimos el vino al modelo local
+                    $scope.cesta.add(vino);  
+                    $scope.displayMode = "preferences"; //cambiar vista  
+                }, // error
+                function(response){
+                    $scope.add2cartStatus = response.statusText;
                     console.log("error: " + response.statusText);
                 });
     };

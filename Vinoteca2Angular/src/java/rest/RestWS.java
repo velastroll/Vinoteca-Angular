@@ -54,7 +54,11 @@ public class RestWS extends Application{
         respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
         respuesta.header("Access-Control-Expose-Headers", "*");
         respuesta.type("application/json");
-        respuesta.entity(a);
+        
+        Abonado[] ab = new Abonado[1];
+        ab[0] = a;
+        respuesta.entity(ab);
+        System.out.println("> getAbonadoByID(" + id + ") : Encontrado " + a.getAbLogin());
         return respuesta.build();
     }
     
@@ -131,6 +135,49 @@ public class RestWS extends Application{
             arrayVino[i] = vinos.get(i);
         }
         return arrayVino;
+    }
+    
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("/abonado/{id}/vinos/{vino}")
+    public Response buyVino(@PathParam("id") String userid, @PathParam("vino") String vinoid) {
+        
+        System.out.println("Usuario: " + userid + "\nVino: " + vinoid + "\n");
+        
+        
+        ResponseBuilder respuesta = Response.status(Response.Status.ACCEPTED);
+        /**
+        List<Vino> vinos = vinoFacade.findAll();
+        List<Preferencia> preferencias = preferenciaFacade.findAll();
+        Abonado a = abonadoFacade.find(userid);
+        List<Vino> disponibles = new ArrayList();
+        // creamos una lista de preferencias de un determinado usuario /
+        for(Preferencia p: preferencias){
+            if ( p.getNifabonado().getAbNif().equals(a.getAbNif()) ) {
+                // Creamos una lista de los vinos disponibles
+                for(Vino v: vinos){
+                    if (p.getCategoria().equals(v.getCategoria()) && p.getIddenominacion().equals(v.getIddenominacion()) ){
+                        disponibles.add(v);
+                    }
+                }
+            }
+        }
+        
+        // creamos un array de vinos disponibles 
+        Vino[] arrayVino = new Vino[disponibles.size()];
+        for(int i = 0; i < disponibles.size() ; i++){
+            arrayVino[i] = disponibles.get(i);
+        }
+        
+        // Generamos la respuesta
+        respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
+        respuesta.header("Access-Control-Expose-Headers", "*");
+        respuesta.type("application/json");
+        if (vinos == null || preferencias == null || arrayVino.length==0) {
+            respuesta.status(Response.Status.NOT_FOUND);
+        }
+        respuesta.entity(arrayVino);**/
+        return respuesta.build();
     }
     
   
