@@ -82,7 +82,7 @@ public class RestWS extends Application{
     }
 
     @GET
-    @Path("/preferencias/vinos/{id}")
+    @Path("/{id}/vinos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVinosDisponibles(@PathParam("id") String id) {
         
@@ -121,79 +121,12 @@ public class RestWS extends Application{
         return respuesta.build();
     }
     
-    
     /**
-     * Login
-     * @return 
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    //@Path("vinos")
-    public Vino[] getVinos() {
-        List<Vino> vinos = vinoFacade.findAll();
-        System.out.println(vinos.get(0).getNombrecomercial());
-        Vino[] arrayVino = new Vino[vinos.size()];
-        for (int i = 0; i < arrayVino.length; i++) {
-            arrayVino[i] = vinos.get(i);
-        }
-        return arrayVino;
-    }
-    
-    /**
-     * Hay que hacer que coja el Vino de la BD y lo meta en cesta de un EJB de sesión.
-     * @param userid
-     * @param vinoid
-     * @return 
-     */
-    @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Path("/abonado/{userid}/vinos/{vinoid}")
-    public Response add2cart(@PathParam("userid") String userid, @PathParam("vinoid") String vinoid) {
-        
-        System.out.println("Usuario: " + userid + "\nVino: " + vinoid + "\n");
-        
-        
-        ResponseBuilder respuesta = Response.status(Response.Status.ACCEPTED);
-        /**
-        List<Vino> vinos = vinoFacade.findAll();
-        List<Preferencia> preferencias = preferenciaFacade.findAll();
-        Abonado a = abonadoFacade.find(userid);
-        List<Vino> disponibles = new ArrayList();
-        // creamos una lista de preferencias de un determinado usuario /
-        for(Preferencia p: preferencias){
-            if ( p.getNifabonado().getAbNif().equals(a.getAbNif()) ) {
-                // Creamos una lista de los vinos disponibles
-                for(Vino v: vinos){
-                    if (p.getCategoria().equals(v.getCategoria()) && p.getIddenominacion().equals(v.getIddenominacion()) ){
-                        disponibles.add(v);
-                    }
-                }
-            }
-        }
-        
-        // creamos un array de vinos disponibles 
-        Vino[] arrayVino = new Vino[disponibles.size()];
-        for(int i = 0; i < disponibles.size() ; i++){
-            arrayVino[i] = disponibles.get(i);
-        }
-        
-        // Generamos la respuesta
-        respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
-        respuesta.header("Access-Control-Expose-Headers", "*");
-        respuesta.type("application/json");
-        if (vinos == null || preferencias == null || arrayVino.length==0) {
-            respuesta.status(Response.Status.NOT_FOUND);
-        }
-        respuesta.entity(arrayVino);**/
-        return respuesta.build();
-    }
-    
-    /**
-     * Hay que hacer que coja el vino de la cesta EJB de sesion y lo meta a la BD
-     * como un pedido nuevo.
+     * Crea un nuevo pedido a partir del login del usuario y del 
+     * identificador del vino
      * 
-     * @param userid
-     * @param vinoid
+     * @param userid login del que solicita el vino
+     * @param vinoid identificacion del vino
      * @return 
      */
     @POST
@@ -245,6 +178,42 @@ public class RestWS extends Application{
         }
         return respuesta.build();
     }
+    
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/pedidos/pendientes")
+    public Response getPedidosPendientes() {
+        
+        ResponseBuilder respuesta = Response.status(Response.Status.ACCEPTED);
+        
+        List<Pedido> pedidos = pedidoFacade.findAll();
+        List<Pedido> pendientes = new ArrayList();
+        
+        /* seleccionamos solo los pendientes */
+        for(Pedido p: pedidos){
+            if ( p.getPeEstado().equals(estadoPedidoFacade.find("p")) ) {
+                pendientes.add(p);
+            }
+        }
+        
+        /* creamos un array de pedidos pendientes */
+        Pedido[] arrayPedido = new Pedido[pendientes.size()];
+        for(int i = 0; i < pendientes.size() ; i++){
+            arrayPedido[i] = pendientes.get(i);
+        }
+        
+        // Generamos la respuesta
+        respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
+        respuesta.header("Access-Control-Expose-Headers", "*");
+        respuesta.type("application/json");
+        if (pendientes == null || pedidos == null || arrayPedido.length==0) {
+            respuesta.status(Response.Status.NOT_FOUND);
+        }
+        respuesta.entity(arrayPedido);
+        return respuesta.build();
+    }
+    
     
     
     

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>EMPLEADO: Gestionar pedidos</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <br>
+            Bienvenido <label>{{id}} </label>, como usted es <label>Empleado</label> puede editar los pedidos:
+            <br>
+        </div>
+        
+        <div class="panel-body" ng-if="orderStatus !== 'Not Found'">
+            
+            <table class="table table-striped table-bordered">
+                <thead> <tr>
+                        <th>Numero de Pedido</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th class="text-right">Nombre Producto</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in pedidillos track by $index">
+                        <td>{{item.peId}}</td>
+                        <td>{{item.peNif.abLogin}}</td>
+                        <td>{{item.peEstado.estado}}</td>
+                        <td>{{item.fecha}}</td>
+                        <td>{{item.peReferencia.vinoid.nombrecomercial}}</td>
+                        <td class="text-center">
+                            <button class="btn btn-xs btn-primary" ng-click="deleteOrder(item)">
+                                Borrar</button>  </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        
+    </body>
+</html>

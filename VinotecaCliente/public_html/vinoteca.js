@@ -47,6 +47,9 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             $scope.displayMode = "orders"; //cambiar vista
             console.log("exito: " + response.statusText);
             console.log("cuerpo: " + response.data);
+            
+            // Obtenemos los opedidos pendientes:
+            $scope.getPedidosPendientes();
         },function(response) { //casca, mostrar error
             $scope.inicioSesion = response.statusText;
             console.log("error: " + response.statusText);
@@ -56,12 +59,12 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
     /**
      * Funcion que añade al modelo 'vinillos' la lista de vinos disponibles
      * segun las preferencias de un determinado usuario.
-     * @param {type} id identificador del usuario = login
+     * @param {type} vinoid identificador del usuario = login
      */
-    $scope.getVinosDisponibles = function(vinoid){
+    $scope.getVinosDisponibles = function(id){
         $http({ // peticion get
             method: "GET",
-            url: baseUrl + "/preferencias/vinos/" + vinoid
+            url: baseUrl + "/" + id + "/vinos"
         }).then( // peticion correcta
                 function(response){
                     $scope.vinillos = response.data; // Vino[] 
@@ -75,26 +78,15 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
     };
     
     /**
-     * Funcion que añade un nuevo vino a la carta, tanto al modelo $scope.cesta 
-     * como al EJB de sesión [EJB TODAVIA SIN IMPLEMENTAR]
+     * Funcion que añade un nuevo vino al modelo $scope.cesta 
      * @param {type} vino
      */
     $scope.add2Cart = function(vino){
-        $http({
-            // lo añadimos al EJB de sesion
-            method: "POST",
-            url: baseUrl + "/abonado/" + $scope.id + "/vinos/" + vino.id
-        }).then(  // success
-                function(){  
-                    console.log("Abonado: " + $scope.id + "/ Vino: " + vino.id ),
-                    // añadimos el vino al modelo local
-                    $scope.cesta.add(vino);  
-                    $scope.displayMode = "preferences"; //cambiar vista  
-                }, // error
-                function(response){
-                    $scope.add2cartStatus = response.statusText;
-                    console.log("error: " + response.statusText);
-                });
+        
+        // añadimos el vino al modelo local
+        $scope.cesta.add(vino);  
+        $scope.displayMode = "preferences"; //cambiar vista  
+                
     };
     
     
@@ -133,5 +125,21 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             console.log("ERROR[buy(" + wine.id + ")]: " + response.statusText);
         });
     };
+    
+    $scope.getPedidosPendientes = function() {
+        $http({ // peticion get
+            method: "GET",
+            url: baseUrl + "/pedidos/pendientes"
+        }).then( // peticion correcta
+                function(response){
+                    $scope.pedidillos = response.data; // Pedidos[] 
+                    console.log("exito: " + response.statusText);
+                    console.log("cuerpo: " + response.data);    
+                }, // peticion incorrecta
+                function(response){
+                    $scope.vinosStatus = response.statusText;
+                    console.log("error: " + response.statusText);
+                });
+    }
 });
            
