@@ -13,10 +13,11 @@ and open the template in the editor.
     <body>
         <div>
             <br>
-            Bienvenido <label>{{id}}</label>,<br>
-            estos son los vinos disponibles acorde a sus preferencias:
+            Bienvenido <label>{{id}} </label>, estos son los vinos disponibles acorde a sus preferencias:
+            <br>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" ng-if="vinosStatus !== 'Not Found'">
+            
             <table class="table table-striped table-bordered">
                 <thead> <tr>
                         <th>Categoria</th>
@@ -36,15 +37,18 @@ and open the template in the editor.
                     </tr>
                 </tbody>
             </table>
+            
             <div ng-if="add2cartStatus === 'Not Found'">
                 No se ha podido añadir a la cesta.
             </div>
-            <div ng-if="vinosStatus === 'Not Found'">
-                No se ha podido encontrar ningún vino.
+            
+            <div> Productos en la cesta: {{cesta.size}} 
+                <button ng-click="changeView('shoppingCart')"> Ver la cesta</button>
             </div>
         </div>
-        <div> Productos en la cesta: {{cesta.size}} 
-            <button ng-click="changeView('shoppingCart')"> Ver la cesta</button>
+        
+        <div ng-if="vinosStatus === 'Not Found'">
+            <label> Ninguno :(</label>
         </div>
 
     </body>

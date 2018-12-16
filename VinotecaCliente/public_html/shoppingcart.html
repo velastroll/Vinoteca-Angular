@@ -32,13 +32,19 @@ and open the template in the editor.
                     </tr>
                 </tbody>
             </table>
+        
+            <div ng-if="buyStatus === 'Accepted'">
+                <br>
+                <label> Compra realizada con éxito</label>
+                <br>
+            </div>
+            
             <button ng-click="buy()">COMPRAR TODO</button>
         </div>
-        <div ng-if="buyStatus === 'Accepted'">
-            <br>
-            <label> Compra realizada con éxito</label>
-            <br>
-            </div>
+        
+        <label ng-if="cesta.size === 0 && buyStatus !== 'Accepted'">Tu cesta está vacía :(</label>
+        
+        
         <br>
         <button ng-click="changeView('preferences')">Volver a preferencias</button>
     </body>
