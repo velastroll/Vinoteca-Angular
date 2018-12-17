@@ -1,0 +1,165 @@
+
+CREATE TABLE "CATEGORIA" ( 
+"CLAVE" CHAR not  NULL primary key,  
+"NOMBRE" VARCHAR(20) default NULL 
+); 
+INSERT INTO categoria (clave,nombre) VALUES  
+    ('a','del anno'), 
+    ('c','crianza'), 
+    ('g','gran reserva'), 
+    ('r','reserva'); 
+CREATE TABLE "DENOMINACION_ORIGEN" ( 
+"DO_ID" INTEGER NOT NULL primary key 
+        GENERATED ALWAYS AS IDENTITY 
+        (START WITH 1, INCREMENT BY 1),  
+"NOMBRE" VARCHAR(20) default NULL 
+); 
+INSERT INTO denominacion_origen (nombre) VALUES  
+    ('Ribera'), 
+    ('Rioja'), 
+    ('Rueda'), 
+    ('Cigales'); 
+CREATE TABLE "PERSONA" ( 
+"NIF" VARCHAR(9) not  NULL primary key,  
+"NOMBRE" VARCHAR(20) default NULL, 
+"APELLIDOS" VARCHAR(20) DEFAULT NULL 
+); 
+INSERT INTO persona (nif,nombre,apellidos) VALUES  
+    ('1111111','Primero','Primer'), 
+    ('2222222','Segundo','Segun'), 
+    ('3333333','Tercero','Tercer'), 
+    ('4444444','Cuarto','Cuart'); 
+CREATE TABLE "EMPLEADO" ( 
+"EM_LOGIN" VARCHAR(20) not NULL primary key, 
+"EM_NIF" VARCHAR(9) not  NULL, 
+"EM_PASSWD" VARCHAR(8) DEFAULT NULL, 
+"PUEDE_MODIFICAR" BOOLEAN DEFAULT NULL, 
+CONSTRAINT EM_FK 
+  FOREIGN KEY (EM_NIF) 
+  REFERENCES PERSONA (NIF) 
+); 
+INSERT INTO empleado (em_nif,em_login,em_passwd,puede_modificar) VALUES  
+    ('2222222','dos','222',true), 
+    ('4444444','cuatro','444', false); 
+CREATE TABLE "ABONADO" ( 
+"AB_LOGIN" VARCHAR(20) not  NULL primary key, 
+"AB_NIF" VARCHAR(9) unique, 
+"AB_PASSWD" VARCHAR(8) DEFAULT NULL, 
+CONSTRAINT AB_FK 
+  FOREIGN KEY (AB_NIF) 
+  REFERENCES PERSONA (NIF) 
+); 
+INSERT INTO abonado (ab_nif,ab_login,ab_passwd) VALUES  
+    ('1111111','uno','111'), 
+    ('3333333','tres','333'); 
+CREATE TABLE "PREFERENCIA" ( 
+"ID" INTEGER NOT NULL primary key 
+        GENERATED ALWAYS AS IDENTITY 
+        (START WITH 1, INCREMENT BY 1), 
+"NIFABONADO" VARCHAR(9) not  NULL, 
+"IDDENOMINACION" INTEGER NOT NULL,  
+"CATEGORIA"  CHAR not  NULL, 
+CONSTRAINT PR_FK1 
+  FOREIGN KEY (NIFABONADO) 
+  REFERENCES abonado (ab_NIF), 
+CONSTRAINT PR_FK2 
+  FOREIGN KEY (IDDENOMINACION) 
+  REFERENCES DENOMINACION_ORIGEN (DO_ID), 
+CONSTRAINT PR_FK3 
+  FOREIGN KEY (CATEGORIA) 
+  REFERENCES CATEGORIA (CLAVE) 
+); 
+INSERT INTO preferencia (NIFABONADO,IDDENOMINACION,CATEGORIA) VALUES  
+    ('1111111',1,'a'), 
+    ('3333333',2,'a'), 
+    ('3333333',2,'c'), 
+    ('1111111',4,'g'), 
+    ('1111111',3,'a'), 
+    ('3333333',1,'g'); 
+CREATE TABLE "BODEGA" ( 
+"ID" INTEGER NOT NULL primary key 
+        GENERATED ALWAYS AS IDENTITY 
+        (START WITH 1, INCREMENT BY 1),  
+"NOMBRE" VARCHAR(50) default NULL, 
+"CIF" VARCHAR(9) DEFAULT NULL, 
+"DIRECCION" VARCHAR(50) DEFAULT NULL 
+); 
+INSERT INTO BODEGA (nombre,CIF,DIRECCION) VALUES  
+    ('Bodega1','bo11','calle bodega1, pueblo1'), 
+    ('Bodega2','bo22','calle bodega2, pueblo2'), 
+    ('Bodega3','bo33','calle bodega3, pueblo3'); 
+CREATE TABLE "VINO" ( 
+"ID" INTEGER NOT NULL primary key 
+        GENERATED ALWAYS AS IDENTITY 
+        (START WITH 1, INCREMENT BY 1), 
+"NOMBRECOMERCIAL" VARCHAR(50) DEFAULT NULL, 
+"COMENTARIO" VARCHAR(200) DEFAULT NULL, 
+"IDBODEGA" INTEGER not  NULL, 
+"IDDENOMINACION" INTEGER NOT NULL,  
+"CATEGORIA"  CHAR not  NULL, 
+CONSTRAINT VI_FK1 
+  FOREIGN KEY (IDBODEGA) 
+  REFERENCES BODEGA (ID), 
+CONSTRAINT VI_FK2 
+  FOREIGN KEY (IDDENOMINACION) 
+  REFERENCES DENOMINACION_ORIGEN (DO_ID), 
+CONSTRAINT VI_FK3 
+  FOREIGN KEY (CATEGORIA) 
+  REFERENCES CATEGORIA (CLAVE) 
+); 
+INSERT INTO VINO (NOMBRECOMERCIAL,COMENTARIO,IDBODEGA,IDDENOMINACION,CATEGORIA) VALUES  
+    ('Mauro','buena relacion calidad‐precio',2,3,'a'), 
+    ('Vega Sicilia','un poco caro, pero buena calidad',2,3,'c'), 
+    ('Flor de baco','comentario a nombre 3',1,1,'g'), 
+    ('Vino merino','comentario a nombre4',1,4,'c'), 
+    ('Don simon','comentario a nombre5',3,2,'r'); 
+CREATE TABLE "REFERENCIA" ( 
+"CODIGO" INTEGER NOT NULL primary key 
+        GENERATED ALWAYS AS IDENTITY 
+        (START WITH 1, INCREMENT BY 1), 
+"ESPORCAJAS" CHAR DEFAULT NULL, 
+"CONTENIDO" SMALLINT DEFAULT NULL, 
+"PRECIO" REAL DEFAULT  NULL,  
+"VINOID"  INTEGER not  NULL, 
+CONSTRAINT RE_FK1 
+  FOREIGN KEY (VINOID) 
+  REFERENCES VINO (ID) 
+); 
+INSERT INTO REFERENCIA (ESPORCAJAS,CONTENIDO,PRECIO,VINOID) VALUES  
+    ('T',6,100,3), 
+    ('F',750,50,2), 
+    ('T',3,20.7,1), 
+    ('F',1500,300,5); 
+CREATE TABLE "ESTADO_PEDIDO" ( 
+"EP_CLAVE" CHAR not  NULL primary key,  
+"ESTADO" VARCHAR(20) default NULL 
+); 
+INSERT INTO estado_pedido (ep_clave,estado) VALUES  
+    ('p','pendiente'), 
+    ('t','tramitado'), 
+    ('c','completado'); 
+CREATE TABLE "PEDIDO" ( 
+"PE_ID" INTEGER NOT NULL primary key 
+        GENERATED ALWAYS AS IDENTITY 
+        (START WITH 1, INCREMENT BY 1), 
+"PE_ESTADO" CHAR NOT NULL, 
+"IMPORTE" REAL DEFAULT  NULL,  
+"FECHA"  VARCHAR(20) default NULL, 
+"PE_NIF"  VARCHAR(9) not  NULL, 
+"PE_REFERENCIA" INTEGER NOT NULL, 
+CONSTRAINT PE_FK1 
+  FOREIGN KEY (PE_NIF) 
+  REFERENCES abonado (ab_NIF), 
+CONSTRAINT PE_FK2 
+  FOREIGN KEY (PE_REFERENCIA) 
+  REFERENCES REFERENCIA (CODIGO), 
+CONSTRAINT PE_FK3 
+  FOREIGN KEY (PE_ESTADO) 
+  REFERENCES ESTADO_PEDIDO (EP_CLAVE) 
+); 
+INSERT INTO PEDIDO (PE_ESTADO,IMPORTE,FECHA,PE_NIF,PE_REFERENCIA) VALUES  
+    ('p',305.67,'03‐05‐2018','1111111',1), 
+    ('p',45.6,'04‐05‐2018','1111111',2), 
+    ('c',65.89,'18‐09‐2018','1111111',3), 
+    ('p',700.89,'03‐10‐2018','3333333',1), 
+    ('t',100.98,'03‐10‐2018','3333333',3); 

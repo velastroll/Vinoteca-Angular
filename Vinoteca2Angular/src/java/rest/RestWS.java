@@ -52,15 +52,13 @@ public class RestWS extends Application{
         Abonado a = abonadoFacade.find(id);
         if (a == null) {
             respuesta.status(Response.Status.NOT_FOUND).build();
+        } else {
+            System.out.println("> getAbonadoByID(" + id + ") : Encontrado " + a.getAbLogin());
         }
         respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
         respuesta.header("Access-Control-Expose-Headers", "*");
         respuesta.type("application/json");
-        
-        Abonado[] ab = new Abonado[1];
-        ab[0] = a;
-        respuesta.entity(ab);
-        System.out.println("> getAbonadoByID(" + id + ") : Encontrado " + a.getAbLogin());
+        respuesta.entity(a);
         return respuesta.build();
     }
     
@@ -207,23 +205,24 @@ public class RestWS extends Application{
         respuesta.header("Access-Control-Allow-Origin", "http://localhost:8383");
         respuesta.header("Access-Control-Expose-Headers", "*");
         respuesta.type("application/json");
-        if (pendientes == null || pedidos == null || arrayPedido.length==0) {
+        if ( pedidos == null || arrayPedido.length == 0) {
             respuesta.status(Response.Status.NOT_FOUND);
         }
         respuesta.entity(arrayPedido);
         return respuesta.build();
     }
     
-    @Path("{pedido}")
+    @Path("/pedidos/{id}")
     @DELETE
-    public void borraPedido(@PathParam("pedido") Pedido pedido) {
-        pedidoFacade.remove(pedido);
+    public void borraPedido(@PathParam("id") int id) {      
+        Pedido p = pedidoFacade.find(id);
+        pedidoFacade.remove(p);
+        System.out.println("> [BORRADO] Pedido con ID: "+ id);
     }
     
     @Path("{pedido}")
     @PUT
     public void setEstadoPedido(@PathParam("pedido") Pedido pedido, String str_est) {
-        
             EstadoPedido estado = new EstadoPedido(str_est);
             pedido.setPeEstado(estado);
             pedidoFacade.edit(pedido);

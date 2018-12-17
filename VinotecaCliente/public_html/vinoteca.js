@@ -31,7 +31,7 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             $scope.abonado = response.data; //?
             $scope.displayMode = "preferences"; //cambiar vista
             console.log("exito: " + response.statusText);
-            console.log("cuerpo: " + $scope.abonado[0].ab_login);
+            console.log("cuerpo: " + $scope.abonado.ab_login);
             
             // Obtiene los vinos disponibles
             $scope.getVinosDisponibles(id);
@@ -72,12 +72,11 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         }).then( // peticion correcta
                 function(response){
                     $scope.vinillos = response.data; // Vino[] 
-                    console.log("exito: " + response.statusText);
-                    console.log("cuerpo: " + response.data);    
+                    console.log("[Vinos disponibles] - " + response.data);    
                 }, // peticion incorrecta
                 function(response){
                     $scope.vinosStatus = response.statusText;
-                    console.log("error: " + response.statusText);
+                    console.log("[getVinos.error] - " + response.statusText);
                 });
     };
     
@@ -155,7 +154,8 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             method: "DELETE",
             url: baseUrl + "/pedidos/" + pedido.peId
         }).success(function() {
-            $scope.pedidillos.splice($scope.products.indexOf(pedido), 1);
+            $scope.pedidillos.splice($scope.pedidillos.indexOf(pedido), 1);
+            console.log("[Delete order] ");
         });
     }
 
