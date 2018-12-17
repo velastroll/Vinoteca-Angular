@@ -7,6 +7,7 @@
 package rest;
 
 import dominio.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -156,11 +157,11 @@ public class RestWS extends Application{
         }
         
         if (ref != null ) System.out.println("> Encontrada referencia del vino: " + ref.toString());
-        
+        String now = LocalDate.now().getDayOfMonth() + "-" + LocalDate.now().getMonth() + "-" + LocalDate.now().getYear();
         Pedido p = new Pedido();
         p.setPeNif(a);
         p.setPeReferencia(ref);
-        p.setFecha("18-12-2018");
+        p.setFecha(now);
         p.setImporte(ref.getPrecio());
         p.setPeEstado(estadoPedidoFacade.find("p"));
         pedidoFacade.create(p);
@@ -220,12 +221,13 @@ public class RestWS extends Application{
         System.out.println("> [BORRADO] Pedido con ID: "+ id);
     }
     
-    @Path("{pedido}")
+    @Path("/pedidos/{id}/{status}")
     @PUT
-    public void setEstadoPedido(@PathParam("pedido") Pedido pedido, String str_est) {
-            EstadoPedido estado = new EstadoPedido(str_est);
-            pedido.setPeEstado(estado);
-            pedidoFacade.edit(pedido);
+    public void setEstadoPedido(@PathParam("id") int id, @PathParam("status") String status) {
+            EstadoPedido estado = new EstadoPedido(status);
+            Pedido p = pedidoFacade.find(id);
+            p.setPeEstado(estado);
+            pedidoFacade.edit(p);
     }
     
     

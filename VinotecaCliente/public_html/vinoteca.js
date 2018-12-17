@@ -4,7 +4,6 @@ inicio.constant("baseUrl", "http://localhost:8080/Vinoteca2Angular/webresources/
 inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
     $scope.displayMode = "login"; // Variable que controla la vista
     $scope.cesta = {
-        size: 0,
         productos: [],
         add : function(item){
             console.log("Vino: " + item.id +" anadido a la cesta");
@@ -18,6 +17,9 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         delete: function(item){
             console.log("Vino: " + item.id +" eliminado de cesta");
             $scope.cesta.productos.splice($scope.cesta.productos.findIndex( producto => producto === item ), 1)
+        },
+        empty: function(){
+            $scope.cesta.productos = [];
         }
     };
     
@@ -95,8 +97,7 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
     $scope.deleteFromCart = function(vino){
         $scope.cesta.delete(vino);
     };
-    
-    
+      
     /**
      * Function para cambiar de vista
      * @param {type} url
@@ -154,15 +155,29 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
             method: "DELETE",
             url: baseUrl + "/pedidos/" + pedido.peId
         }).success(function() {
+            console.log("[Delete] Order: " + pedido.peId);
             $scope.pedidillos.splice($scope.pedidillos.indexOf(pedido), 1);
-            console.log("[Delete order] ");
         });
-    }
+    };
 
-    
+    $scope.changeOrderStatus = function(item, newstatus){
+        $http({
+            method: "PUT",
+            url: baseUrl + "/pedidos/" +  item.peId + "/" + newstatus
+        }).success(function() {
+            $scope.displayMode = "orders"
+            console.log("[Change status] Order: " + item.peId + ", Status: " + newstatus);
+            $scope.pedidillos.splice($scope.pedidillos.indexOf(item), 1);
+        });
+    };
+
     $scope.cerrarSesion = function() {
-         //$scope.currentProduct = {};
+         $scope.cesta.empty();
+         $scope.id = 0;
+         $scope.abonado = {};
+         $scope.empleado = {};
          $scope.displayMode = "login";
-    }
+    };
+    
 });
            

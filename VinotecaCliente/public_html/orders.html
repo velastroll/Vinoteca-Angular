@@ -35,8 +35,8 @@ and open the template in the editor.
                         <td>{{item.peNif.abLogin}}</td>
                         <td>
                             {{item.peEstado.estado}}
-                            <button ng-click="">tramitado</button>
-                            <button ng-click="">completado</button>
+                            <button ng-click="changeOrderStatus(item, 't')">tramitado</button>
+                            <button ng-click="changeOrderStatus(item, 'c')">completado</button>
                         </td>
                         <td>{{item.fecha}}</td>
                         <td>{{item.peReferencia.vinoid.nombrecomercial}}</td>
@@ -49,9 +49,7 @@ and open the template in the editor.
         </div>
         
         <div>
-            <button ng-click="changeView('login')">
-                Salir
-            </button>
+            <button ng-click="cerrarSesion()"> Cerrar Sesion </button>  
         </div>
         
         
