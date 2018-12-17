@@ -31,8 +31,8 @@ and open the template in the editor.
                         <td>{{item.comentario}}</td>
                         <td>{{item.nombrecomercial}}</td>
                         <td>
-                            <a href="https://en.wikipedia.org/w/api.php?action=opensearch&search=%20{{item.nombrecomercial}}%22&limit=4&format=json">
-                                Enlace a  entrada de vino de Wikipedia
+                            <a href="{{getWikipedia(item.nombrecomercial)}}">
+                                Lee más en Wikipedia
                             </a>
                         </td>
                         <td class="text-center">
