@@ -33,7 +33,11 @@ and open the template in the editor.
                     <tr ng-repeat="item in pedidillos track by $index">
                         <td>{{item.peId}}</td>
                         <td>{{item.peNif.abLogin}}</td>
-                        <td>{{item.peEstado.estado}}</td>
+                        <td>
+                            {{item.peEstado.estado}}
+                            <button ng-click="">tramitado</button>
+                            <button ng-click="">completado</button>
+                        </td>
                         <td>{{item.fecha}}</td>
                         <td>{{item.peReferencia.vinoid.nombrecomercial}}</td>
                         <td class="text-center">
@@ -42,6 +46,12 @@ and open the template in the editor.
                     </tr>
                 </tbody>
             </table>
+        </div>
+        
+        <div>
+            <button ng-click="changeView('login')">
+                Salir
+            </button>
         </div>
         
         

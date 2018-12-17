@@ -7,13 +7,17 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         size: 0,
         productos: [],
         add : function(item){
-            console.log("Vino: " + item.id);
+            console.log("Vino: " + item.id +" anadido a la cesta");
             if ($scope.cesta.size === 0){
                 $scope.cesta.productos = [item]; // array de vinos
             } else {
             $scope.cesta.productos.push(item); // añade un vino al array
-            }
+            };
             $scope.cesta.size++;
+        },
+        delete: function(item){
+            console.log("Vino: " + item.id +" eliminado de cesta");
+            $scope.cesta.productos.splice($scope.cesta.productos.findIndex( producto => producto === item ), 1)
         }
     };
     
@@ -88,6 +92,10 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
         $scope.displayMode = "preferences"; //cambiar vista  
                 
     };
+
+    $scope.deleteFromCart = function(vino){
+        $scope.cesta.delete(vino);
+    };
     
     
     /**
@@ -140,6 +148,21 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
                     $scope.vinosStatus = response.statusText;
                     console.log("error: " + response.statusText);
                 });
+    }
+    
+    $scope.deleteOrder = function(pedido) {
+        $http({
+            method: "DELETE",
+            url: baseUrl + "/pedidos/" + pedido.peId
+        }).success(function() {
+            $scope.pedidillos.splice($scope.products.indexOf(pedido), 1);
+        });
+    }
+
+    
+    $scope.cerrarSesion = function() {
+         //$scope.currentProduct = {};
+         $scope.displayMode = "login";
     }
 });
            

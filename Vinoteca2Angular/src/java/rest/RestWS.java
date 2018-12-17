@@ -214,7 +214,20 @@ public class RestWS extends Application{
         return respuesta.build();
     }
     
+    @Path("{pedido}")
+    @DELETE
+    public void borraPedido(@PathParam("pedido") Pedido pedido) {
+        pedidoFacade.remove(pedido);
+    }
     
+    @Path("{pedido}")
+    @PUT
+    public void setEstadoPedido(@PathParam("pedido") Pedido pedido, String str_est) {
+        
+            EstadoPedido estado = new EstadoPedido(str_est);
+            pedido.setPeEstado(estado);
+            pedidoFacade.edit(pedido);
+    }
     
     
   

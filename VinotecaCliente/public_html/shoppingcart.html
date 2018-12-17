@@ -28,7 +28,10 @@ and open the template in the editor.
                         <td>{{item.categoria.nombre}}</td>
                         <td>{{item.comentario}}</td>
                         <td>{{item.nombrecomercial}}</td>
-                        <td><button ng-click="buyWine(item)">Comprar</button></td>
+                        <td>
+                            <button ng-click="buyWine(item)">Comprar</button>
+                            <button ng-click="deleteFromCart(item)">Borrar</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
