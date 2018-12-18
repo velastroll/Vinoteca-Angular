@@ -31,9 +31,9 @@ and open the template in the editor.
                         <td>{{item.comentario}}</td>
                         <td>{{item.nombrecomercial}}</td>
                         <td>
-                            <a href="{{getWikipedia(item.nombrecomercial)}}">
-                                Lee más en Wikipedia
-                            </a>
+                            <button ng-click="getWikipedia(item.nombrecomercial)">
+                                Ver en Wikipedia
+                            </button>
                         </td>
                         <td class="text-center">
                             <button class="btn btn-xs btn-primary" ng-click="add2Cart(item)">

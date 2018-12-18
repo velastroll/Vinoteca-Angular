@@ -1,7 +1,7 @@
 
 var inicio = angular.module("mainMod", []);
 inicio.constant("baseUrl", "http://localhost:8080/Vinoteca2Angular/webresources/paraAngular");
-inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamos recursos
+inicio.controller("getUserCtrl", function($window, $scope, $http, baseUrl) { // Inyectamos recursos
     $scope.displayMode = "login"; // Variable que controla la vista
     $scope.cesta = {
         productos: [],
@@ -174,14 +174,16 @@ inicio.controller("getUserCtrl", function($scope, $http, baseUrl) { // Inyectamo
     $scope.getWikipedia = function(nombre) {
         $http({
             method: "GET",
-            url: "en.wikipedia.org/w/api.php?action=opensearch&search=%20" + nombre +"%22&limit=1&format=json"
+            url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=%20"+nombre+"%22&limit=1&format=json"
         }).then(function(response){
-            resultJSON = response.data;
-            console.log(resultJSON);
-            return "google.com";
+            enlace = response.data[3][0];
+            if (enlace === undefined){
+                console.log("No se ha encontrado en wikipedia.");
+            } else {
+                $window.location.href = enlace;
+            }
         }, function(response){
-            console.log("Link Not Found: " + nombre);
-            return "twitter.com";
+            console.log([response.data[3][0]]);
         });
         
         

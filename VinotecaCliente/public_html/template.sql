@@ -1,3 +1,18 @@
+DROP TABLE EMPLEADO;
+DROP TABLE PREFERENCIA;
+DROP TABLE PEDIDO;
+DROP TABLE REFERENCIA;
+DROP TABLE ESTADO_PEDIDO;
+DROP TABLE ABONADO;
+DROP TABLE PERSONA;
+DROP TABLE VINO;
+DROP TABLE BODEGA;
+DROP TABLE DENOMINACION_ORIGEN;
+DROP TABLE CATEGORIA;
+
+
+
+
 
 CREATE TABLE "CATEGORIA" ( 
 "CLAVE" CHAR not  NULL primary key,  
@@ -110,8 +125,8 @@ CONSTRAINT VI_FK3
 INSERT INTO VINO (NOMBRECOMERCIAL,COMENTARIO,IDBODEGA,IDDENOMINACION,CATEGORIA) VALUES  
     ('Mauro','buena relacion calidad‐precio',2,3,'a'), 
     ('Vega Sicilia','un poco caro, pero buena calidad',2,3,'c'), 
-    ('Flor de baco','comentario a nombre 3',1,1,'g'), 
-    ('Vino merino','comentario a nombre4',1,4,'c'), 
+    ('Don Perignon','comentario a nombre 3',1,1,'g'), 
+    ('Arzuaga','comentario a nombre4',1,4,'c'), 
     ('Don simon','comentario a nombre5',3,2,'r'); 
 CREATE TABLE "REFERENCIA" ( 
 "CODIGO" INTEGER NOT NULL primary key 
