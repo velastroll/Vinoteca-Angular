@@ -81,7 +81,7 @@ public class RestWS extends Application{
     }
 
     @GET
-    @Path("/{id}/vinos")
+    @Path("/abonado/{id}/vinos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVinosDisponibles(@PathParam("id") String id) {
         
@@ -130,7 +130,7 @@ public class RestWS extends Application{
      */
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
-    @Path("/{userid}/{vinoid}")
+    @Path("/abonado/{userid}/vinos/{vinoid}/pedido")
     public Response buyVino(@PathParam("userid") String userid, @PathParam("vinoid") String vinoid) {
         
         System.out.println("[BUY] Usuario: " + userid + "\nVino: " + vinoid + "\n");

@@ -50,6 +50,7 @@ inicio.controller("getUserCtrl", function($window, $scope, $http, baseUrl) { // 
             url: baseUrl + "/empleado/" + empleadoid
         }).then(function(response) { //furrula, ir a pagina abonado
             $scope.empleado = response.data; //?
+            $scope.id = empleadoid;
             $scope.displayMode = "orders"; //cambiar vista
             console.log("exito: " + response.statusText);
             console.log("cuerpo: " + response.data);
@@ -70,7 +71,7 @@ inicio.controller("getUserCtrl", function($window, $scope, $http, baseUrl) { // 
     $scope.getVinosDisponibles = function(id){
         $http({ // peticion get
             method: "GET",
-            url: baseUrl + "/" + id + "/vinos"
+            url: baseUrl + "/abonado/" + id + "/vinos"
         }).then( // peticion correcta
                 function(response){
                     $scope.vinillos = response.data; // Vino[] 
@@ -108,19 +109,11 @@ inicio.controller("getUserCtrl", function($window, $scope, $http, baseUrl) { // 
         $scope.add2cartStatus = '';
     };
     
-    /**
-     * Funcion que compra todo lo que hay en la cesta
-     */
-    $scope.buy = function(){
-        for (item in $scope.cesta.productos){
-            $scope.buyWine(item);
-        }
-    };
     
     $scope.buyWine = function(wine){
         $http({
             method: "POST",
-            url: baseUrl + "/" + $scope.id + "/" + wine.id
+            url: baseUrl + "/abonado/" + $scope.id + "/vinos/" + wine.id + "/pedido"
         }).then(function(response){
             $scope.buyStatus = response.statusText;
             index = $scope.cesta.productos.indexOf(wine);
